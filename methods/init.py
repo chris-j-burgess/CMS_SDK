@@ -6,6 +6,7 @@ Purpose: Initiate Session, Meetings, Calls and other events
 
 """
 
+from mimetypes import init
 from urllib.parse import urljoin
 import yaml, json
 import os
@@ -35,4 +36,13 @@ class Session():
 
     def ucsm_xml_api_test(self):  
         return api.ucsm_xml_api_test(self.ip, self.auth)
+
+    def method_choice(self, method):
+        return {
+        'coSpaces': api.coSpaces,
+        'coSpaces_detail': api.coSpaces_detail,
+        'coSpaces_entry_detail': api.coSpaces_entry_detail,
+        'coSpaces_listMembers': api.coSpaces_listMembers,
+        'rest_test': self.rest_test,
+        }.get(method)()
 
