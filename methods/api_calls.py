@@ -8,14 +8,19 @@ Purpose: Make API calls
 
 import requests
 import xmltodict
-
+import functools
 
 # Test Getters to be deleted
-
-def xml_Decorator(text):
-    return xmltodict.parse(text)
-
+def xml_Decorator(f):
+    "A Decorator to ensure that the XML output is converted to Python Dict for management elsewhere"
+    @functools.wraps(f)
+    def wrap(*args, **kwargs):
+        text = f(*args, **kwargs)
+        return xmltodict.parse(text)
+    return wrap
+    
 def __getarequest__(uri, auth):
+    "A wrapper for all GET Requests"
     headers = {'Accept': 'application/yang-data+json, application/yang-data.errors+json'}
     return requests.get(uri, auth=auth, headers=headers)
 
@@ -24,7 +29,7 @@ def restconf_test(ip, auth):
     call = __getarequest__(url, auth)
     return call.json()
 
-
+@xml_Decorator
 def ucsm_xml_api_test(ip, auth):
     pass
 

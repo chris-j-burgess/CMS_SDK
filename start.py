@@ -6,9 +6,7 @@ Purpose: Initiate session an import key variables.
 """
 
 import argparse
-from methods.api_calls import restconf_test
 import methods.init as init
-
 
 def main():
 
@@ -23,11 +21,11 @@ def main():
         print("Session Mode")
 
     if args.method:
-        print(f"""Method is:  {args.method}
-        
-        """)
-        print(connection.method_choice(args.method))
-        
+        print(f"Method is:  {args.method} \n \n")
+        try:
+            print(connection.method_choice(args.method))
+        except TypeError as e:
+            print(f"Method {args.method} not recognised as an actual function")
     else:
         print("No Method Selected")
 
