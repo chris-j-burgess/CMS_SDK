@@ -6,6 +6,7 @@ Purpose: Initiate session an import key variables.
 """
 
 import argparse
+from xmlrpc.client import Boolean
 import methods.init as init
 import sys
 
@@ -21,7 +22,12 @@ def main():
                     help='relative address for config file.  Default=variables/config.cfg')
     cms_parser.add_argument('--method', 
                     help='call a particular method - options include: ')
+    cms_parser.add_argument('--data', metavar='path', type=str,
+                    help='relative address for the config data file to be passed to method')
+    cms_parser.add_argument('--interactive', type=bool,
+                    help='to interactively access the methods')
 
+    
     # Execute the parse_args method()
     args = cms_parser.parse_args()
 
@@ -30,7 +36,7 @@ def main():
     else:
         connection = init.Session()
 
-    print(connection.restconf_test())
+    print(connection.rest_test())
 
 if __name__ == "__main__":
     main()

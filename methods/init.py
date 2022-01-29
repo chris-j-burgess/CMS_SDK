@@ -2,13 +2,15 @@
 
 """
 Author: Chris Burgess
-Purpose: Initiate session an import key variables.
+Purpose: Initiate Session, Meetings, Calls and other events
+
 """
 
 from urllib.parse import urljoin
-import yaml
+import yaml, json
 import os
-import requests
+import methods.api_calls as api
+
 
 class Session():
 
@@ -24,14 +26,13 @@ class Session():
                 self.password = os.getenv(CMS_PASS)
             self.auth = (self.username, self.password)
 
-    def __getrequest__(self, uri):
-        headers = {'Accept': 'application/yang-data+json, application/yang-data.errors+json'}
-        return requests.get(uri, auth=self.auth, headers=headers)
+    def prettyJSON(text):
+        output = json.loads(text)   
+        return json.dumps(output, indent=4, sort_keys=True)
 
+    def rest_test(self):
+        return api.restconf_test(self.ip, self.auth)
 
-    def restconf_test(self):
-        url = "https://"+self.ip+'/restconf/data/openconfig-interfaces:interfaces'
-        call = self.__getrequest__( url)
-        return call.json()
+    def ucsm_xml_api_test(self):  
+        return api.ucsm_xml_api_test(self.ip, self.auth)
 
-        
