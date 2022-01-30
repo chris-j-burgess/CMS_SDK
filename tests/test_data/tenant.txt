@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<tenants total="1">
+    <tenant id="10d7415d-9a57-4fd9-81ef-736ae4d5a993">
+        <name>PVMR Tenant</name>
+    </tenant>
+</tenants>
+
+
+<?xml version="1.0"?>
+<tenant id="10d7415d-9a57-4fd9-81ef-736ae4d5a993">
+    <name>PVMR Tenant</name>
+    <callProfile>ce6cdf9b-76cb-4d4b-a070-a6247c3902ac</callProfile>
+    <callBrandingProfile>b85358fc-913d-4a46-b4ce-3dacf9d5748e</callBrandingProfile>
+    <ivrBrandingProfile>90e83d3b-0258-4867-97bb-33fdc66a4932</ivrBrandingProfile>
+</tenant>
