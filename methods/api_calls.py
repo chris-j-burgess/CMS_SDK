@@ -25,16 +25,15 @@ def xml_Decorator(f):
 def __getarequest__(uri, auth, params=None):
     "A wrapper for all GET Requests"
     headers = {
-        "Accept": "application/yang-data+json, application/yang-data.errors+json"
+        "Accept": "application/yang-data+xml, application/yang-data.errors+xml"
     }
-    return requests.get(uri, auth=auth, headers=headers, params=params)
-
-
+    response = requests.get(uri, auth=auth, headers=headers, params=params)
+    return response.content
+   
+@xml_Decorator
 def restconf_test(ip, auth):
     url = "https://" + ip + "/restconf/data/openconfig-interfaces:interfaces"
-    call = __getarequest__(url, auth)
-    return call.json()
-
+    return __getarequest__(url, auth)
 
 @xml_Decorator
 def ucsm_xml_api_test(ip, auth):
@@ -45,7 +44,8 @@ def ucsm_xml_api_test(ip, auth):
 
 
 def __getrequest__(uri, auth, params=None):
-    return requests.get(uri, auth=auth, params=params)
+    response = requests.get(uri, auth=auth, headers=headers, params=params)
+    return response.content
 
 
 def coSpaces(ip, auth):

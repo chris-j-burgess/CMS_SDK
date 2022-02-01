@@ -1,5 +1,10 @@
 parsing.py
-tests/test_data
+tests/test_data/callLegProfile chair.txt
+tests/test_data/callLegProfile guest.txt
+tests/test_data/CallLegProfile.txt
+tests/test_data/coSpace details.txt
+tests/test_data/coSpace get.txt
+tests/test_data/tenant.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

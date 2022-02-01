@@ -11,6 +11,16 @@ import os
 from . import api_calls as api
 import functools
 
+def prettyJSON(f):
+    "Decorator to be used to take the dictionary out of most api_calls and make easier to read"
+
+    @functools.wraps(f)
+    def wrap(*args, **kwargs):
+        x = f(*args, **kwargs)
+        return json.dumps(x, indent=4, sort_keys=True)
+
+    return wrap
+
 
 class Session:
     def __init__(self, file="variables/config.cfg"):
@@ -29,15 +39,6 @@ class Session:
             self.__auth = (self.__username, self.__password)
 
     # Decorator to be used to take the dictionary out of most api_calls and make easier to read
-    def prettyJSON(f):
-        "Decorator to be used to take the dictionary out of most api_calls and make easier to read"
-
-        @functools.wraps(f)
-        def wrap(*args, **kwargs):
-            x = f(*args, **kwargs)
-            return json.dumps(x, indent=4, sort_keys=True)
-
-        return wrap
 
     @prettyJSON
     def rest_test(self):
@@ -58,10 +59,41 @@ class Session:
             "rest_test": self.rest_test,
         }.get(method)()
 
+    @prettyJSON
+    def coSpaces(self):
+        return api.coSpaces(self.__ip, self.__auth)
 
-class Meeting:
+    # Params is the 'coSpaceID' from earlier Getter Calls
+
+
+class Meeting(Session):
     def __init__(self):
         pass
 
     def __call__(self, *args, **kwargs):
         return self(*args, **kwargs)
+
+
+    def coSpaces_detail(self):
+
+        return call.text()
+
+    @prettyJSON
+    def coSpaces_entry_detail(self):
+        return api.coSpaces_entry_detail(self.__ip, self.__auth, self.coSpaceID)
+
+    @prettyJSON
+    def coSpaces_listMembers(self):
+        if callLegProfileID:
+            call = api.coSpaces_entry_detail(self.__ip, self.__auth, self.coSpaceID, callLegProfileID=self.callLegProfileID)
+        else:
+            call = api.coSpaces_entry_detail(self.__ip, self.__auth, self.coSpaceID)
+        return call
+
+    @prettyJSON
+    def coSpaces_listMembers(self):
+        if callLegProfileID:       
+           call = api.coSpaces_entry_detail(self.__ip, self.__auth, self.coSpaceID, self.userID, callLegProfileID=self.callLegProfileID)
+        else:
+            call = api.coSpaces_entry_detail(self.__ip, self.__auth, self.userID, self.coSpaceID)
+        return call

@@ -28,3 +28,6 @@ import json
 
 def test_methodchoices():
     assert init.Session.method_choice("coSpaces") == "api.coSpaces"
+
+def test_getarequest():
+    
