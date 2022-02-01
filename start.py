@@ -73,6 +73,13 @@ if __name__ == "__main__":
         help="to interactively access the methods",
     )
 
+    cms_parser.add_argument(
+        "-s",
+        "--save",
+        action="store_true",
+        help="save to file in Outputs Directory",
+    )
+
     # Execute the parse_args method()
     args = cms_parser.parse_args()
 
