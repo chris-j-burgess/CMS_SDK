@@ -78,9 +78,10 @@ def coSpaces_entry_detail(ip, auth, coSpaceID):
 def coSpaces_listMembers(ip, auth, coSpaceID, callLegProfileID=None):
     url = "https://" + ip + "/api/v1/coSpaces/" + coSpaceID + "/coSpaceUsers"
     if callLegProfileID:
-        call = __getrequest__(url, auth, params=callLegProfileID)
+        params = {"callLegProfileID": callLegProfileID}
     else:
-        call = __getrequest__(url, auth)
+        params = None
+    call = __getrequest__(url, auth, params=params)
     return call
 
 
@@ -88,9 +89,10 @@ def coSpaces_listMembers(ip, auth, coSpaceID, callLegProfileID=None):
 def coSpaces_listMembers(ip, auth, coSpaceID, userID, callLegProfileID=None):
     url = "https://" + ip + "/api/v1/coSpaces/" + coSpaceID + "/coSpaceUsers/" + userID
     if callLegProfileID:
-        call = __getrequest__(url, auth, params=callLegProfileID)
+        params = {"callLegProfileID": callLegProfileID}
     else:
-        call = __getrequest__(url, auth)
+        params = None
+    call = __getrequest__(url, auth, params=params)
     return call
 
 
@@ -116,9 +118,10 @@ def coSpace_templates(ip, auth):
 def dial_plan_outbound(ip, auth, tenantID=None):
     url = "https://" + ip + "/api/v1/outboundDialPlanRules"
     if tenantID:
-        call = __getrequest__(url, auth, params=tenantID)
+        params = {"tenantID": tenantID}
     else:
-        call = __getrequest__(url, auth)
+        params = None
+    call = __getrequest__(url, auth, params=params)
     return call
 
 
@@ -132,9 +135,10 @@ def dial_transforms(ip, auth):
 def inbound_rules(ip, auth, tenantID=None):
     url = "https://" + ip + "/api/v1/inboundDialPlanRules"
     if tenantID:
-        call = __getrequest__(url, auth, params=tenantID)
+        params = {"tenantID": tenantID}
     else:
-        call = __getrequest__(url, auth)
+        params = None
+    call = __getrequest__(url, auth, params=params)
     return call
 
 

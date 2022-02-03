@@ -23,10 +23,13 @@ def main():
 
     if args.method:
         print(f"Method is:  {args.method} \n \n")
-        try:
-            print(connection.method_choice(args.method))
-        except TypeError as e:
-            print(f"Method {args.method} not recognised as an actual function")
+        if args.method == "get_facts":
+            connection.get_facts()
+        else:
+            try:
+                print(connection.method_choice(args.method))
+            except TypeError:
+                print(f"Method {args.method} not recognised as an actual function")
     else:
         print("No Method Selected")
 

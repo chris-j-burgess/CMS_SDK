@@ -12,6 +12,10 @@ from . import api_calls as api
 import functools
 
 
+output_dir = "output"
+test = True
+
+
 def prettyJSON(f):
     "Decorator to be used to take the dictionary out of most api_calls and make easier to read"
 
@@ -24,7 +28,7 @@ def prettyJSON(f):
 
 
 class Session:
-    def __init__(self, file="variables/config.cfg"):
+    def __init__(self, file="variables/config.cfg", method=None):
 
         #  Load the config file with key detail
         with open(file, "rt") as handle:
@@ -40,114 +44,103 @@ class Session:
             self.__auth = (self.__username, self.__password)
 
     # Decorator to be used to take the dictionary out of most api_calls and make easier to read
-
-    simple_get_methods = {
-        "coSpaces": self.coSpaces,
-        "coSpace_bulk_params": self.coSpace_bulk_params,
-        "coSpace_bulk_sync": self.coSpace_bulk_sync,
-        "coSpace_templates": self.coSpace_templates,
-        "dial_transforms": self.dial_transforms,
-        "call_profiles": self.call_profiles,
-        "rest_test": self.rest_test,
+    methods = {
+        "coSpaces": api.coSpaces,
+        "coSpace_bulk_params": api.coSpace_bulk_params,
+        "coSpace_bulk_sync": api.coSpace_bulk_sync,
+        "coSpace_templates": api.coSpace_templates,
+        "dial_transforms": api.dial_transforms,
+        "call_profiles": api.call_profiles,
+        "rest_test": api.restconf_test,
     }
 
     @prettyJSON
-    def rest_test(self):
-        "Run a test RESTCONF API call designed for an XE device, to test the code"
-        return api.restconf_test(self.__ip, self.__auth)
-
-    def ucsm_xml_api_test(self):
-        "Run a test API call designed for an UCSM device"
-        return api.ucsm_xml_api_test(self.__ip, self.__auth)
-
     def method_choice(self, method):
         "This allows args.method to choose a method and make a call.  The CMS calls need building as instance methods, like self.rest_test"
-        return simple_get_methods.get(method)()
+        return self.methods.get(method)(self.__ip, self.__auth)
 
-    @prettyJSON
-    def coSpaces(self):
-        return api.coSpaces(self.__ip, self.__auth)
+    def write_file(self, name):
+        print(f"Performing REST call against {name}")
+        try:
+            method_ouput = self.method_choice(name)
+            print(f"Saving JSON output of {name} to {output_dir} directory")
+            with open(f"{output_dir}/{name}.txt", "w") as f:
+                f.write(method_ouput)
+        except TypeError:
+            print(f"Unable to perform REST request against: {name}")
 
-    @prettyJSON
-    def coSpace_bulk_params(self):
-        return api.coSpace_bulk_params(self.__ip, self.__auth)
-
-    @prettyJSON
-    def coSpace_bulk_sync(self):
-        return api.coSpace_bulk_sync(self.__ip, self.__auth)
-
-    @prettyJSON
-    def coSpace_templates(self):
-        return api.coSpace_templates(self.__ip, self.__auth)
-
-    @prettyJSON
-    def dial_transforms(self):
-        return api.dial_transforms(self.__ip, self.__auth)
-
-    @prettyJSON
-    def call_profiles(self):
-        return api.call_profiles(self.__ip, self.__auth)
-
-    # Params is the 'coSpaceID' from earlier Getter Calls
-
-
-class Meeting(Session):
-    def __init__(self, coSpaceID, callLegProfileID=None):
-        self.coSpaceID = coSpaceID
-        if callLegProfileID:
-            self.callLegProfileID = callLegProfileID
+    def get_facts(self):
+        if not os.path.isdir(output_dir):
+            os.makedirs(output_dir)
+            print(f"Creating {output_dir} directory .....")
+        if test:
+            name = "rest_test"
+            self.write_file(name)
         else:
-            self.callLegProfileID = None
+            for name in self.methods.keys():
+                self.write_file(name)
 
-    def __call__(self, *args, **kwargs):
-        return self(*args, **kwargs)
 
-    meeting_get_methods = {
-        "coSpaces": self.coSpaces,
-        "coSpace_bulk_params": self.coSpace_bulk_params,
-        "coSpace_bulk_sync": self.coSpace_bulk_sync,
-        "coSpace_templates": self.coSpace_templates,
-        "dial_transforms": self.dial_transforms,
-        "call_profiles": self.call_profiles,
-        "rest_test": self.rest_test,
-    }
+# Params is the 'coSpaceID' from earlier Getter Calls
 
-    def method_choice(self, method):
-        "This allows args.method to choose a method and make a call.  The CMS calls need building as instance methods, like self.rest_test"
-        return meeting_get_methods.get(method)()
 
-    def coSpaces_detail(self):
-        pass
+# class Meeting(Session):
+#     def __init__(self, coSpaceID, callLegProfileID=None):
+#         self.coSpaceID = coSpaceID
+#         if callLegProfileID:
+#             self.callLegProfileID = callLegProfileID
+#         else:
+#             self.callLegProfileID = None
 
-    @prettyJSON
-    def coSpaces_entry_detail(self):
-        return api.coSpaces_entry_detail(self.__ip, self.__auth, self.coSpaceID)
+#     def __call__(self, *args, **kwargs):
+#         return self(*args, **kwargs)
 
-    @prettyJSON
-    def coSpaces_listMembers(self):
-        if callLegProfileID:
-            call = api.coSpaces_entry_detail(
-                self.__ip,
-                self.__auth,
-                self.coSpaceID,
-                callLegProfileID=self.callLegProfileID,
-            )
-        else:
-            call = api.coSpaces_entry_detail(self.__ip, self.__auth, self.coSpaceID)
-        return call
+#     meeting_get_methods = {
+#         "coSpaces": self.coSpaces,
+#         "coSpace_bulk_params": self.coSpace_bulk_params,
+#         "coSpace_bulk_sync": self.coSpace_bulk_sync,
+#         "coSpace_templates": self.coSpace_templates,
+#         "dial_transforms": self.dial_transforms,
+#         "call_profiles": self.call_profiles,
+#         "rest_test": self.rest_test,
+#     }
 
-    @prettyJSON
-    def coSpaces_listMembers(self):
-        if callLegProfileID:
-            call = api.coSpaces_entry_detail(
-                self.__ip,
-                self.__auth,
-                self.coSpaceID,
-                self.userID,
-                callLegProfileID=self.callLegProfileID,
-            )
-        else:
-            call = api.coSpaces_entry_detail(
-                self.__ip, self.__auth, self.userID, self.coSpaceID
-            )
-        return call
+#     def method_choice(self, method):
+#         "This allows args.method to choose a method and make a call.  The CMS calls need building as instance methods, like self.rest_test"
+#         return meeting_get_methods.get(method)()
+
+#     def coSpaces_detail(self):
+#         pass
+
+#     @prettyJSON
+#     def coSpaces_entry_detail(self):
+#         return api.coSpaces_entry_detail(self.__ip, self.__auth, self.coSpaceID)
+
+#     @prettyJSON
+#     def coSpaces_listMembers(self):
+#         if callLegProfileID:
+#             call = api.coSpaces_entry_detail(
+#                 self.__ip,
+#                 self.__auth,
+#                 self.coSpaceID,
+#                 callLegProfileID=self.callLegProfileID,
+#             )
+#         else:
+#             call = api.coSpaces_entry_detail(self.__ip, self.__auth, self.coSpaceID)
+#         return call
+
+#     @prettyJSON
+#     def coSpaces_listMembers(self):
+#         if callLegProfileID:
+#             call = api.coSpaces_entry_detail(
+#                 self.__ip,
+#                 self.__auth,
+#                 self.coSpaceID,
+#                 self.userID,
+#                 callLegProfileID=self.callLegProfileID,
+#             )
+#         else:
+#             call = api.coSpaces_entry_detail(
+#                 self.__ip, self.__auth, self.userID, self.coSpaceID
+#             )
+#         return call
