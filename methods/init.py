@@ -78,7 +78,10 @@ class Session:
             self.write_file(name)
         else:
             for name in self.methods.keys():
-                self.write_file(name)
+                if name == 'rest_test':
+                    continue
+                else:
+                    self.write_file(name)
 
 
 # Params is the 'coSpaceID' from earlier Getter Calls
