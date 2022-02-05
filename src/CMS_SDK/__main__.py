@@ -2,8 +2,10 @@
 
 """
 Author: Chris Burgess
-Purpose: Initiate session an import key variables.
+Purpose: Allow execution of the package
+
 """
+
 
 import argparse
 import init

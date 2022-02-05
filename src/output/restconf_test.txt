@@ -1,0 +1,464 @@
+
+<interfaces xmlns="http://openconfig.net/yang/interfaces"  xmlns:oc-if="http://openconfig.net/yang/interfaces">
+  <interface>
+    <name>GigabitEthernet1</name>
+    <config>
+      <name>GigabitEthernet1</name>
+      <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+      <description>MANAGEMENT INTERFACE - DON'T TOUCH ME</description>
+      <enabled>true</enabled>
+    </config>
+    <state>
+      <name>GigabitEthernet1</name>
+      <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+      <description>MANAGEMENT INTERFACE - DON'T TOUCH ME</description>
+      <enabled>true</enabled>
+      <ifindex>1</ifindex>
+      <admin-status>UP</admin-status>
+      <oper-status>UP</oper-status>
+      <last-change>1644043399174000000</last-change>
+      <counters>
+        <in-octets>2764960</in-octets>
+        <in-unicast-pkts>24184</in-unicast-pkts>
+        <in-broadcast-pkts>0</in-broadcast-pkts>
+        <in-multicast-pkts>0</in-multicast-pkts>
+        <in-discards>0</in-discards>
+        <in-errors>0</in-errors>
+        <in-unknown-protos>0</in-unknown-protos>
+        <in-fcs-errors>0</in-fcs-errors>
+        <out-octets>10332035</out-octets>
+        <out-unicast-pkts>30633</out-unicast-pkts>
+        <out-broadcast-pkts>0</out-broadcast-pkts>
+        <out-multicast-pkts>0</out-multicast-pkts>
+        <out-discards>0</out-discards>
+        <out-errors>0</out-errors>
+        <last-clear>1644043273000000000</last-clear>
+      </counters>
+    </state>
+    <subinterfaces>
+      <subinterface>
+        <index>0</index>
+        <config>
+          <index>0</index>
+          <description>MANAGEMENT INTERFACE - DON'T TOUCH ME</description>
+          <enabled>true</enabled>
+        </config>
+        <state>
+          <description>MANAGEMENT INTERFACE - DON'T TOUCH ME</description>
+          <enabled>true</enabled>
+          <name>GigabitEthernet1</name>
+          <ifindex>1</ifindex>
+          <admin-status>UP</admin-status>
+          <oper-status>UP</oper-status>
+          <last-change>1644043399174000000</last-change>
+          <counters>
+            <in-octets>2764960</in-octets>
+            <in-unicast-pkts>24184</in-unicast-pkts>
+            <in-broadcast-pkts>0</in-broadcast-pkts>
+            <in-multicast-pkts>0</in-multicast-pkts>
+            <in-discards>0</in-discards>
+            <in-errors>0</in-errors>
+            <in-unknown-protos>0</in-unknown-protos>
+            <in-fcs-errors>0</in-fcs-errors>
+            <out-octets>10332035</out-octets>
+            <out-unicast-pkts>30633</out-unicast-pkts>
+            <out-broadcast-pkts>0</out-broadcast-pkts>
+            <out-multicast-pkts>0</out-multicast-pkts>
+            <out-discards>0</out-discards>
+            <out-errors>0</out-errors>
+            <last-clear>1644043273000000000</last-clear>
+          </counters>
+        </state>
+        <ipv4 xmlns="http://openconfig.net/yang/interfaces/ip">
+        <addresses>
+          <address>
+            <ip>10.10.20.48</ip>
+            <config>
+              <ip>10.10.20.48</ip>
+              <prefix-length>24</prefix-length>
+            </config>
+            <state>
+              <ip>10.10.20.48</ip>
+              <prefix-length>24</prefix-length>
+            </state>
+          </address>
+        </addresses>
+        <proxy-arp>
+        <state>
+          <mode>DISABLE</mode>
+        </state>
+      </proxy-arp>
+      <state>
+      <counters>
+        <in-pkts>24145</in-pkts>
+        <in-octets>2762620</in-octets>
+        <in-error-pkts>0</in-error-pkts>
+        <in-forwarded-pkts>0</in-forwarded-pkts>
+        <in-forwarded-octets>0</in-forwarded-octets>
+        <in-discarded-pkts>0</in-discarded-pkts>
+        <out-pkts>30605</out-pkts>
+        <out-octets>10330327</out-octets>
+        <out-error-pkts>0</out-error-pkts>
+        <out-forwarded-pkts>30603</out-forwarded-pkts>
+        <out-forwarded-octets>0</out-forwarded-octets>
+        <out-discarded-pkts>0</out-discarded-pkts>
+      </counters>
+    </state>
+  </ipv4>
+  <ipv6 xmlns="http://openconfig.net/yang/interfaces/ip">
+  <config>
+    <enabled>false</enabled>
+  </config>
+  <state>
+    <enabled>false</enabled>
+    <counters>
+      <in-pkts>0</in-pkts>
+      <in-octets>0</in-octets>
+      <in-error-pkts>0</in-error-pkts>
+      <in-forwarded-pkts>0</in-forwarded-pkts>
+      <in-forwarded-octets>0</in-forwarded-octets>
+      <in-discarded-pkts>0</in-discarded-pkts>
+      <out-pkts>0</out-pkts>
+      <out-octets>0</out-octets>
+      <out-error-pkts>0</out-error-pkts>
+      <out-forwarded-pkts>0</out-forwarded-pkts>
+      <out-forwarded-octets>0</out-forwarded-octets>
+      <out-discarded-pkts>0</out-discarded-pkts>
+    </counters>
+  </state>
+</ipv6>
+</subinterface>
+</subinterfaces>
+<ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">
+<config>
+  <mac-address>00:50:56:bf:78:ac</mac-address>
+  <auto-negotiate>true</auto-negotiate>
+  <enable-flow-control>true</enable-flow-control>
+</config>
+<state>
+  <mac-address>00:50:56:bf:78:ac</mac-address>
+  <auto-negotiate>true</auto-negotiate>
+  <port-speed>SPEED_1GB</port-speed>
+  <enable-flow-control>false</enable-flow-control>
+  <hw-mac-address>00:50:56:bf:78:ac</hw-mac-address>
+  <negotiated-duplex-mode>FULL</negotiated-duplex-mode>
+  <negotiated-port-speed>SPEED_1GB</negotiated-port-speed>
+  <counters>
+    <in-mac-control-frames>0</in-mac-control-frames>
+    <in-mac-pause-frames>0</in-mac-pause-frames>
+    <in-oversize-frames>0</in-oversize-frames>
+    <in-jabber-frames>0</in-jabber-frames>
+    <in-fragment-frames>0</in-fragment-frames>
+    <in-8021q-frames>0</in-8021q-frames>
+    <in-crc-errors>0</in-crc-errors>
+    <out-mac-control-frames>0</out-mac-control-frames>
+    <out-mac-pause-frames>0</out-mac-pause-frames>
+    <out-8021q-frames>0</out-8021q-frames>
+  </counters>
+</state>
+</ethernet>
+</interface>
+<interface>
+  <name>GigabitEthernet2</name>
+  <config>
+    <name>GigabitEthernet2</name>
+    <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+    <description>Network Interface</description>
+    <enabled>false</enabled>
+  </config>
+  <state>
+    <name>GigabitEthernet2</name>
+    <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+    <description>Network Interface</description>
+    <enabled>false</enabled>
+    <ifindex>2</ifindex>
+    <admin-status>DOWN</admin-status>
+    <oper-status>DOWN</oper-status>
+    <last-change>1644043393822000000</last-change>
+    <counters>
+      <in-octets>300</in-octets>
+      <in-unicast-pkts>5</in-unicast-pkts>
+      <in-broadcast-pkts>0</in-broadcast-pkts>
+      <in-multicast-pkts>0</in-multicast-pkts>
+      <in-discards>0</in-discards>
+      <in-errors>0</in-errors>
+      <in-unknown-protos>0</in-unknown-protos>
+      <in-fcs-errors>0</in-fcs-errors>
+      <out-octets>0</out-octets>
+      <out-unicast-pkts>0</out-unicast-pkts>
+      <out-broadcast-pkts>0</out-broadcast-pkts>
+      <out-multicast-pkts>0</out-multicast-pkts>
+      <out-discards>0</out-discards>
+      <out-errors>0</out-errors>
+      <last-clear>1644043272000000000</last-clear>
+    </counters>
+  </state>
+  <subinterfaces>
+    <subinterface>
+      <index>0</index>
+      <config>
+        <index>0</index>
+        <description>Network Interface</description>
+        <enabled>false</enabled>
+      </config>
+      <state>
+        <description>Network Interface</description>
+        <enabled>false</enabled>
+        <name>GigabitEthernet2</name>
+        <ifindex>2</ifindex>
+        <admin-status>DOWN</admin-status>
+        <oper-status>DOWN</oper-status>
+        <last-change>1644043393822000000</last-change>
+        <counters>
+          <in-octets>300</in-octets>
+          <in-unicast-pkts>5</in-unicast-pkts>
+          <in-broadcast-pkts>0</in-broadcast-pkts>
+          <in-multicast-pkts>0</in-multicast-pkts>
+          <in-discards>0</in-discards>
+          <in-errors>0</in-errors>
+          <in-unknown-protos>0</in-unknown-protos>
+          <in-fcs-errors>0</in-fcs-errors>
+          <out-octets>0</out-octets>
+          <out-unicast-pkts>0</out-unicast-pkts>
+          <out-broadcast-pkts>0</out-broadcast-pkts>
+          <out-multicast-pkts>0</out-multicast-pkts>
+          <out-discards>0</out-discards>
+          <out-errors>0</out-errors>
+          <last-clear>1644043272000000000</last-clear>
+        </counters>
+      </state>
+      <ipv4 xmlns="http://openconfig.net/yang/interfaces/ip">
+      <proxy-arp>
+      <state>
+        <mode>DISABLE</mode>
+      </state>
+    </proxy-arp>
+    <state>
+    <counters>
+      <in-pkts>0</in-pkts>
+      <in-octets>0</in-octets>
+      <in-error-pkts>0</in-error-pkts>
+      <in-forwarded-pkts>0</in-forwarded-pkts>
+      <in-forwarded-octets>0</in-forwarded-octets>
+      <in-discarded-pkts>0</in-discarded-pkts>
+      <out-pkts>0</out-pkts>
+      <out-octets>0</out-octets>
+      <out-error-pkts>0</out-error-pkts>
+      <out-forwarded-pkts>0</out-forwarded-pkts>
+      <out-forwarded-octets>0</out-forwarded-octets>
+      <out-discarded-pkts>0</out-discarded-pkts>
+    </counters>
+  </state>
+</ipv4>
+<ipv6 xmlns="http://openconfig.net/yang/interfaces/ip">
+<config>
+  <enabled>false</enabled>
+</config>
+<state>
+  <enabled>false</enabled>
+  <counters>
+    <in-pkts>0</in-pkts>
+    <in-octets>0</in-octets>
+    <in-error-pkts>0</in-error-pkts>
+    <in-forwarded-pkts>0</in-forwarded-pkts>
+    <in-forwarded-octets>0</in-forwarded-octets>
+    <in-discarded-pkts>0</in-discarded-pkts>
+    <out-pkts>0</out-pkts>
+    <out-octets>0</out-octets>
+    <out-error-pkts>0</out-error-pkts>
+    <out-forwarded-pkts>0</out-forwarded-pkts>
+    <out-forwarded-octets>0</out-forwarded-octets>
+    <out-discarded-pkts>0</out-discarded-pkts>
+  </counters>
+</state>
+</ipv6>
+</subinterface>
+</subinterfaces>
+<ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">
+<config>
+  <mac-address>00:50:56:bf:4e:a3</mac-address>
+  <auto-negotiate>true</auto-negotiate>
+  <enable-flow-control>true</enable-flow-control>
+</config>
+<state>
+  <mac-address>00:50:56:bf:4e:a3</mac-address>
+  <auto-negotiate>true</auto-negotiate>
+  <port-speed>SPEED_1GB</port-speed>
+  <enable-flow-control>false</enable-flow-control>
+  <hw-mac-address>00:50:56:bf:4e:a3</hw-mac-address>
+  <negotiated-duplex-mode>FULL</negotiated-duplex-mode>
+  <negotiated-port-speed>SPEED_1GB</negotiated-port-speed>
+  <counters>
+    <in-mac-control-frames>0</in-mac-control-frames>
+    <in-mac-pause-frames>0</in-mac-pause-frames>
+    <in-oversize-frames>0</in-oversize-frames>
+    <in-jabber-frames>0</in-jabber-frames>
+    <in-fragment-frames>0</in-fragment-frames>
+    <in-8021q-frames>0</in-8021q-frames>
+    <in-crc-errors>0</in-crc-errors>
+    <out-mac-control-frames>0</out-mac-control-frames>
+    <out-mac-pause-frames>0</out-mac-pause-frames>
+    <out-8021q-frames>0</out-8021q-frames>
+  </counters>
+</state>
+</ethernet>
+</interface>
+<interface>
+  <name>GigabitEthernet3</name>
+  <config>
+    <name>GigabitEthernet3</name>
+    <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+    <description>HSIP1</description>
+    <enabled>true</enabled>
+  </config>
+  <state>
+    <name>GigabitEthernet3</name>
+    <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+    <description>HSIP1</description>
+    <enabled>true</enabled>
+    <ifindex>3</ifindex>
+    <admin-status>UP</admin-status>
+    <oper-status>LOWER_LAYER_DOWN</oper-status>
+    <last-change>1644058541785000000</last-change>
+    <counters>
+      <in-octets>0</in-octets>
+      <in-unicast-pkts>0</in-unicast-pkts>
+      <in-broadcast-pkts>0</in-broadcast-pkts>
+      <in-multicast-pkts>0</in-multicast-pkts>
+      <in-discards>0</in-discards>
+      <in-errors>0</in-errors>
+      <in-unknown-protos>0</in-unknown-protos>
+      <in-fcs-errors>0</in-fcs-errors>
+      <out-octets>0</out-octets>
+      <out-unicast-pkts>0</out-unicast-pkts>
+      <out-broadcast-pkts>0</out-broadcast-pkts>
+      <out-multicast-pkts>0</out-multicast-pkts>
+      <out-discards>0</out-discards>
+      <out-errors>0</out-errors>
+      <last-clear>1644043273000000000</last-clear>
+    </counters>
+  </state>
+  <subinterfaces>
+    <subinterface>
+      <index>0</index>
+      <config>
+        <index>0</index>
+        <description>HSIP1</description>
+        <enabled>true</enabled>
+      </config>
+      <state>
+        <description>HSIP1</description>
+        <enabled>true</enabled>
+        <name>GigabitEthernet3</name>
+        <ifindex>3</ifindex>
+        <admin-status>UP</admin-status>
+        <oper-status>LOWER_LAYER_DOWN</oper-status>
+        <last-change>1644058541785000000</last-change>
+        <counters>
+          <in-octets>0</in-octets>
+          <in-unicast-pkts>0</in-unicast-pkts>
+          <in-broadcast-pkts>0</in-broadcast-pkts>
+          <in-multicast-pkts>0</in-multicast-pkts>
+          <in-discards>0</in-discards>
+          <in-errors>0</in-errors>
+          <in-unknown-protos>0</in-unknown-protos>
+          <in-fcs-errors>0</in-fcs-errors>
+          <out-octets>0</out-octets>
+          <out-unicast-pkts>0</out-unicast-pkts>
+          <out-broadcast-pkts>0</out-broadcast-pkts>
+          <out-multicast-pkts>0</out-multicast-pkts>
+          <out-discards>0</out-discards>
+          <out-errors>0</out-errors>
+          <last-clear>1644043273000000000</last-clear>
+        </counters>
+      </state>
+      <ipv4 xmlns="http://openconfig.net/yang/interfaces/ip">
+      <addresses>
+        <address>
+          <ip>212.56.100.1</ip>
+          <config>
+            <ip>212.56.100.1</ip>
+            <prefix-length>29</prefix-length>
+          </config>
+          <state>
+            <ip>212.56.100.1</ip>
+            <prefix-length>29</prefix-length>
+          </state>
+        </address>
+      </addresses>
+      <proxy-arp>
+      <state>
+        <mode>DISABLE</mode>
+      </state>
+    </proxy-arp>
+    <state>
+    <counters>
+      <in-pkts>0</in-pkts>
+      <in-octets>0</in-octets>
+      <in-error-pkts>0</in-error-pkts>
+      <in-forwarded-pkts>0</in-forwarded-pkts>
+      <in-forwarded-octets>0</in-forwarded-octets>
+      <in-discarded-pkts>0</in-discarded-pkts>
+      <out-pkts>0</out-pkts>
+      <out-octets>0</out-octets>
+      <out-error-pkts>0</out-error-pkts>
+      <out-forwarded-pkts>0</out-forwarded-pkts>
+      <out-forwarded-octets>0</out-forwarded-octets>
+      <out-discarded-pkts>0</out-discarded-pkts>
+    </counters>
+  </state>
+</ipv4>
+<ipv6 xmlns="http://openconfig.net/yang/interfaces/ip">
+<config>
+  <enabled>false</enabled>
+</config>
+<state>
+  <enabled>false</enabled>
+  <counters>
+    <in-pkts>0</in-pkts>
+    <in-octets>0</in-octets>
+    <in-error-pkts>0</in-error-pkts>
+    <in-forwarded-pkts>0</in-forwarded-pkts>
+    <in-forwarded-octets>0</in-forwarded-octets>
+    <in-discarded-pkts>0</in-discarded-pkts>
+    <out-pkts>0</out-pkts>
+    <out-octets>0</out-octets>
+    <out-error-pkts>0</out-error-pkts>
+    <out-forwarded-pkts>0</out-forwarded-pkts>
+    <out-forwarded-octets>0</out-forwarded-octets>
+    <out-discarded-pkts>0</out-discarded-pkts>
+  </counters>
+</state>
+</ipv6>
+</subinterface>
+</subinterfaces>
+<ethernet xmlns="http://openconfig.net/yang/interfaces/ethernet">
+<config>
+  <mac-address>00:50:56:bf:7d:b4</mac-address>
+  <auto-negotiate>true</auto-negotiate>
+  <enable-flow-control>true</enable-flow-control>
+</config>
+<state>
+  <mac-address>00:50:56:bf:7d:b4</mac-address>
+  <auto-negotiate>true</auto-negotiate>
+  <port-speed>SPEED_1GB</port-speed>
+  <enable-flow-control>false</enable-flow-control>
+  <hw-mac-address>00:50:56:bf:7d:b4</hw-mac-address>
+  <negotiated-duplex-mode>FULL</negotiated-duplex-mode>
+  <negotiated-port-speed>SPEED_1GB</negotiated-port-speed>
+  <counters>
+    <in-mac-control-frames>0</in-mac-control-frames>
+    <in-mac-pause-frames>0</in-mac-pause-frames>
+    <in-oversize-frames>0</in-oversize-frames>
+    <in-jabber-frames>0</in-jabber-frames>
+    <in-fragment-frames>0</in-fragment-frames>
+    <in-8021q-frames>0</in-8021q-frames>
+    <in-crc-errors>0</in-crc-errors>
+    <out-mac-control-frames>0</out-mac-control-frames>
+    <out-mac-pause-frames>0</out-mac-pause-frames>
+    <out-8021q-frames>0</out-8021q-frames>
+  </counters>
+</state>
+</ethernet>
+</interface>
+</interfaces>

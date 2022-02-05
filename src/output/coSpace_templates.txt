@@ -1,0 +1,12 @@
+{
+    "coSpaceTemplates": {
+        "@total": "1",
+        "coSpaceTemplate": {
+            "@id": "f7a585fd-55c6-4b32-ae24-65859fee2c71",
+            "callLegProfile": "b4d99fdd-bee1-48b7-80f3-2bc3df9e8ba9",
+            "callProfile": "d3d2fbfa-798c-4655-90a7-e6a4792bd269",
+            "name": "name_templates",
+            "numAccessMethodTemplates": "0"
+        }
+    }
+}

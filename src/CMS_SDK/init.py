@@ -13,8 +13,6 @@ import functools
 
 
 output_dir = "output"
-test = True
-
 
 def prettyJSON(f):
     "Decorator to be used to take the dictionary out of most api_calls and pass to user interface as JSON"
@@ -35,15 +33,16 @@ class Session():
     :param method: A method call which the user has input at command prompt
     :type addr: str, optional
     """
-    def __init__(self, file="variables/config.cfg", method=None):
+    def __init__(self, file="CMS_SDK/variables/config.cfg", method=None):
 
         #  Load the config file with key detail
         with open(file, "rt") as handle:
             config = yaml.safe_load(handle)
-            if test:
+            self.test= config["config"]["test"]
+            if self.test:
                 self.__ip = config["config"]["ip"]
             else:
-                self.__ip = f"{self.ip}:"+config["config"]["port"]
+                self.__ip = config["config"]["ip"] + ":" + config["config"]["port"]
             self.__username = config["config"]["username"]
             if config["config"]["password"]:
                 self.__password = config["config"]["password"]
@@ -52,6 +51,7 @@ class Session():
                     CMS_PASS
                 )  # if password stored in Env Var, capture it.
             self.__auth = (self.__username, self.__password)
+            
 
     # Decorator to be used to take the dictionary out of most api_calls and make easier to read
     methods = {
@@ -62,6 +62,36 @@ class Session():
         "dial_transforms": api.dial_transforms,
         "call_profiles": api.call_profiles,
         "rest_test": api.restconf_test,
+        "callBrandingProfiles": api.callBrandingProfiles,
+        "callBridgeGroups": api.callBridgeGroups,
+        "callBridges": api.callBridges,
+        "callLegProfiles": api.callLegProfiles,
+        "calls": api.calls,
+        "compatibilityProfiles": api.compatibilityProfiles,
+        "dtmfProfiles": api.dtmfProfiles,
+        "inboundDialPlanRules": api.inboundDialPlanRules,
+        "ivrs": api.ivrs,
+        "layoutTemplates": api.layoutTemplates,
+        "ldapMappings":  api.ldapMappings,
+        "ldapServers":  api.ldapServers,
+        "ldapSources": api.ldapSources,
+        "ldapSyncs": api.ldapSyncs,
+        "ldapUserCoSpaceTemplateSources": api.ldapUserCoSpaceTemplateSources,
+        "outboundDialPlanRules": api.outboundDialPlanRules,
+        "participants": api.participants,
+        "systemAlarms": api.systemAlarms,
+        "cdrReceivers": api.cdrReceivers,
+        "configCluster": api.configCluster,
+        "configXMPP": api.configXMPP,
+        "systemDiag": api.systemDiag,
+        "licensing": api.licensing,
+        "status": api.status,
+        "tenantGroups": api.tenantGroups,
+        "tenants": api.tenants,
+        "turnServers":  api.turnServers,
+        "userProfiles": api.userProfiles,
+        "users": api.users,
+        "webBridges": api.webBridges,
     }
 
     @prettyJSON
@@ -83,7 +113,7 @@ class Session():
         if not os.path.isdir(output_dir):
             os.makedirs(output_dir)
             print(f"Creating {output_dir} directory .....")
-        if test:
+        if self.test:
             name = "rest_test"
             self.write_file(name)
         else:

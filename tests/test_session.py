@@ -7,7 +7,7 @@ Purpose: Test Cases for Session Methods
 """
 
 from operator import contains
-import methods.init as init
+import src.CMS_SDK.init as init
 import json
 
 

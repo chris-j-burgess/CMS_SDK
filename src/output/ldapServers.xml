@@ -1,0 +1,1 @@
+<?xml version="1.0"?><ldapServers total="1"><ldapServer id="94519ed3-b46a-4f67-a05c-e68bb5448bef"><address>198.18.1.2</address><name>ldapserver</name><username>admin</username><portNumber>448</portNumber><secure>true</secure><usePagedResults>true</usePagedResults></ldapServer></ldapServers>

@@ -1,0 +1,45 @@
+POST for host callLegProfile to /callLegProfiles
+
+needsActivation=false&
+defaultLayout=speakerOnly&
+presentationContributionAllowed=true&
+rxAudioMute=false&
+rxVideoMute=false
+
+
+POST for guest callLegProfile to /callLegProfiles
+
+needsActivation=true& defaultLayout=speakerOnly&
+presentationContributionAllowed=false&
+rxAudioMute=true&
+rxVideoMute=false&
+deactivationMode=deactivate
+
+PUT https://anyserver/api/v1/coSpaces/ccccc-ccccc
+associate  with coSpace,
+
+callLegProfile=bbbbb-bbbbb
+
+POST https://anyserver/api/ v1/coSpaces/ccccc-ccccc/accessMethods
+
+uri=10100&callLegProfile=aaaa-aaaaa&callID=10100
+
+--------------------------------------------------------
+
+To modify the host call Leg Profile, use the following method
+
+PUT    https://anyserver/api/v1/callLegProfiles/callLeg3
+The host callLegProfile callLeg3 is able to lock and unlock meeting lobby
+
+
+needsActivation=false&
+defaultLayout=speakerOnly&
+presentationContributionAllowed=true&
+rxAudioMute=false&
+rxVideoMute=false&callLockAllowed=true
+callLockAllowed=True
+
+---------------------------------------------------
+create a new DTMF profile, use the following API method:
+
+POST https://anyserver/api/v1/dtmfProfiles
