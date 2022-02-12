@@ -1,0 +1,11 @@
+!!python/object/apply:collections.OrderedDict
+- - - dialTransforms
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '1'
+        - - dialTransform
+          - !!python/object/apply:collections.OrderedDict
+            - - - '@id'
+                - cd2c6694-c67e-4a80-a4eb-59804bff0bd1
+              - - type
+                - raw

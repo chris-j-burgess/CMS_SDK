@@ -1,0 +1,9 @@
+!!python/object/apply:collections.OrderedDict
+- - - dtmfProfiles
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '1'
+        - - dtmfProfile
+          - !!python/object/apply:collections.OrderedDict
+            - - - '@id'
+                - 3b4bf5f4-92ed-4b47-b07d-db83e8bb8a2b

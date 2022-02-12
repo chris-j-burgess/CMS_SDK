@@ -1,0 +1,11 @@
+!!python/object/apply:collections.OrderedDict
+- - - callBridges
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '1'
+        - - callBridge
+          - !!python/object/apply:collections.OrderedDict
+            - - - '@id'
+                - 3ac9e06f-add5-495c-bf1a-f36c92f388d2
+              - - name
+                - callBridgeGroup1

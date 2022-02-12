@@ -1,0 +1,19 @@
+!!python/object/apply:collections.OrderedDict
+- - - ldapSources
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '1'
+        - - ldapSource
+          - !!python/object/apply:collections.OrderedDict
+            - - - '@id'
+                - 47859833-21ea-4820-8d1f-3f344f567498
+              - - server
+                - 94519ed3-b46a-4f67-a05c-e68bb5448bef
+              - - mapping
+                - 8c20f15b-8614-4a2e-9d23-b4683b2bf9ac
+              - - baseDn
+                - basedn
+              - - filter
+                - null
+              - - nonMemberAccess
+                - 'true'

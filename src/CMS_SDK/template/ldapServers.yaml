@@ -1,0 +1,21 @@
+!!python/object/apply:collections.OrderedDict
+- - - ldapServers
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '1'
+        - - ldapServer
+          - !!python/object/apply:collections.OrderedDict
+            - - - '@id'
+                - 94519ed3-b46a-4f67-a05c-e68bb5448bef
+              - - address
+                - 198.18.1.2
+              - - name
+                - ldapserver
+              - - username
+                - admin
+              - - portNumber
+                - '448'
+              - - secure
+                - 'true'
+              - - usePagedResults
+                - 'true'

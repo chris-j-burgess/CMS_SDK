@@ -1,0 +1,9 @@
+!!python/object/apply:collections.OrderedDict
+- - - compatibilityProfiles
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '1'
+        - - compatibilityProfile
+          - !!python/object/apply:collections.OrderedDict
+            - - - '@id'
+                - bf8c81e4-09cd-4c72-96f5-900a75950430

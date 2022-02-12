@@ -1,0 +1,5 @@
+!!python/object/apply:collections.OrderedDict
+- - - ldapSyncs
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '0'

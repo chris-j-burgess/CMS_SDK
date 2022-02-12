@@ -1,0 +1,13 @@
+!!python/object/apply:collections.OrderedDict
+- - - cospaceBulkParameterSets
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '1'
+        - - cospaceBulkParameterSet
+          - !!python/object/apply:collections.OrderedDict
+            - - - '@id'
+                - 011b49f9-662f-4ed3-b051-4a0e90f359e8
+              - - startIndex
+                - '1'
+              - - endIndex
+                - '10'

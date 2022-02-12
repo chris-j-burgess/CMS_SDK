@@ -1,0 +1,15 @@
+!!python/object/apply:collections.OrderedDict
+- - - cospaceBulkSyncs
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '1'
+        - - cospaceBulkSync
+          - !!python/object/apply:collections.OrderedDict
+            - - - '@id'
+                - aaca14fb-0e91-4353-92e1-13a7196157f5
+              - - cospaceBulkParameterSet
+                - 011b49f9-662f-4ed3-b051-4a0e90f359e8
+              - - removeAll
+                - 'false'
+              - - status
+                - failedCoSpaceUriConflict

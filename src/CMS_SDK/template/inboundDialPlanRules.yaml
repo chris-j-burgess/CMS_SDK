@@ -1,0 +1,13 @@
+!!python/object/apply:collections.OrderedDict
+- - - inboundDialPlanRules
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '1'
+        - - inboundDialPlanRule
+          - !!python/object/apply:collections.OrderedDict
+            - - - '@id'
+                - 6a1b121c-b396-4dea-ba4d-5b3d19adb33b
+              - - domain
+                - domain.com
+              - - priority
+                - '1'

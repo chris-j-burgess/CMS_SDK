@@ -1,0 +1,9 @@
+!!python/object/apply:collections.OrderedDict
+- - - callBrandingProfiles
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '1'
+        - - callBrandingProfile
+          - !!python/object/apply:collections.OrderedDict
+            - - - '@id'
+                - f826c5bc-ea1c-4947-9021-832072ab27d0

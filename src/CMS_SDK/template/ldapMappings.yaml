@@ -1,0 +1,13 @@
+!!python/object/apply:collections.OrderedDict
+- - - ldapMappings
+    - !!python/object/apply:collections.OrderedDict
+      - - - '@total'
+          - '1'
+        - - ldapMapping
+          - !!python/object/apply:collections.OrderedDict
+            - - - '@id'
+                - 8c20f15b-8614-4a2e-9d23-b4683b2bf9ac
+              - - jidMapping
+                - jidMapping
+              - - nameMapping
+                - name
