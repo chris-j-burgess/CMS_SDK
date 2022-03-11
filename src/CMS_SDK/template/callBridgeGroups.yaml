@@ -2,6 +2,6 @@
 ---
 
 callBridgeGroup:
-  name: "Test"
+  name: "Test"     # string
 
 ...

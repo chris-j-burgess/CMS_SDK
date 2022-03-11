@@ -12,7 +12,6 @@ import xmltodict, json
 import functools
 import os
 
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 # Test Getters to be deleted
 def xml_Decorator(f) -> dict:
@@ -123,7 +122,8 @@ methods = {
 }
 
 
-def _getrequest(uri, auth, params=None):
+@xml_Decorator
+def _getrequest(uri, auth, verify=False, params=None):
     headers = {"Accept": "application/xml"}
     response = requests.get(
         uri, auth=auth, headers=headers, params=params, verify=False
@@ -131,8 +131,31 @@ def _getrequest(uri, auth, params=None):
     return response.content
 
 
-@xml_Decorator
-def method_choice(method: str, ip: str, auth: tuple) -> dict:
+def _postrequest(uri, auth, body, verify=False, params=None):
+    headers = {"Accept": "application/xml", "Content-Type": "application/xml"}
+    response = requests.post(
+        uri, auth=auth, headers=headers, params=params, verify=verify, data=body
+    )
+    return response.status_code
+
+
+def method_choice(
+    method: str,
+    call: str,
+    ip: str,
+    auth: tuple,
+    test=True,
+    body=False,
+) -> dict:
+
     "This allows args.method to choose a method and make a call.  The CMS calls need building as instance methods, like self.rest_test"
     url = f"https//{ip}" + methods.get(method)
-    return _getrequest(url, auth)
+    if test:
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+        verify = False
+    else:
+        verify = True
+    if call == "POST" and body != None:
+        return _postrequest(url, auth, body, verify)
+    else:
+        return _getrequest(url, auth, verify)

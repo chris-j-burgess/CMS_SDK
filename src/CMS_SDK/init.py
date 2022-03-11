@@ -12,7 +12,7 @@ import os
 import api_calls as api
 import functools
 
-
+input_dir = "input"
 output_dir = "output"
 
 
@@ -40,11 +40,12 @@ class Session:
     :type addr: str, optional
     """
 
-    def __init__(self, file="src/CMS_SDK/variables/config.cfg", method=None):
+    def __init__(self, file_path="src/CMS_SDK/variables/config.cfg", method=None):
 
         #  Load the config file with key detail
-        with open(file, "rt") as handle:
+        with open(file_path, "rt") as handle:
             config = yaml.safe_load(handle)
+            self.file = file_path
             self.test = config["config"]["test"]
             if self.test:
                 self._ip = config["config"]["ip"]
@@ -61,7 +62,7 @@ class Session:
             self.method = method
 
     def __repr__(self) -> str:
-        return f"{typename(self).__name__}: (file={file}, method={self.method})"
+        return f"{typename(self).__name__}: (file={self.file}, method={self.method})"
 
     def __str__(self) -> str:
         return self.__format__
@@ -72,14 +73,14 @@ class Session:
     # Decorator to be used to take the dictionary out of most api_calls and make easier to read
 
     @prettyJSON
-    def method_choice(self, method):
+    def method_choice(self, method, call, data):
         "This allows args.method to choose a method and make a call.  The CMS calls need building as instance methods, like self.rest_test"
-        return api.method_choice(method, self._ip, self._auth)
+        return api.method_choice(method, call, self._ip, self._auth, self.test, data)
 
-    def write_file(self, name):
+    def write_file(self, name, call):
         print(f"Performing REST call against {name}")
         try:
-            method_ouput = self.method_choice(name)
+            method_ouput = self.method_choice(name, call)
             print(f"Saving JSON output of {name} to {output_dir} directory")
             with open(f"{output_dir}/{name}.txt", "w") as f:
                 f.write(method_ouput)
@@ -87,26 +88,51 @@ class Session:
             print(f"Unable to perform REST request against: {name}")
 
     def get_facts(self):
+        call = "GET"
         if not os.path.isdir(output_dir):
             os.makedirs(output_dir)
             print(f"Creating {output_dir} directory .....")
         if self.test:
             name = "rest_test"
-            self.write_file(name)
+            self.write_file(name, call)
         else:
             for name in self.methods.keys():
                 if name == "rest_test":
                     continue
                 else:
-                    self.write_file(name)
+                    self.write_file(name, call)
 
+    def _yaml2dict(self, file_input):
+        return yaml.safe_load(file_input)
 
-# Params is the 'coSpaceID' from earlier Getter Calls
+    def _json2dict(self, file_input):
+        return json.load(file_input)
+
+    def set_up(self):
+        call = "POST"
+        for file_name in os.listdir(input_dir):
+            filename, extension = file_name.split(".")
+            with open(file_name, "r") as read_input:
+                if extension == "yaml" or extension == "yml":
+                    data = _yaml2dict(read_input)
+                if extension == "json" or extension == "jsn":
+                    data = _json2dict(read_input)
+                else:
+                    data = read_input
+
+                api_call = self.method_choice(filename, call, data)
+
+                if api_call >= 200 and api_call <= 300:
+                    print(f"API call to {filename} successful")
+                if api_call >= 300:
+                    print(
+                        f"API Call to {filename} unsuccessful - Status Code {api_call}"
+                    )
 
 
 # class Space(Session):
 #     def __init__(self, coSpaceID, callLegProfileID=None):
-#         super().__init__
+#         super().__init__()
 #         self.coSpaceID = coSpaceID
 #         if callLegProfileID:
 #             self.callLegProfileID = callLegProfileID
