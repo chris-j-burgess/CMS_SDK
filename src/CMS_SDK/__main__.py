@@ -12,6 +12,10 @@ import init
 
 
 def main():
+    """
+    This function controls the user interaction through CLI using argsparse.  
+    It uses the init.Session class to interact with CMS Server, and handle connection specific variables.
+    """
 
     if args.config:
         connection = init.Session(args.config)
@@ -26,10 +30,11 @@ def main():
     if args.method:
         print(f"Method is:  {args.method} \n \n")
         if args.method == "get_facts":
+            """ get_facts needs rewriting.  Written to support RESTCONF request.  Needs to run a set of GET Requests across all method statements"""
             connection.get_facts()
         else:
             # try:
-            print(connection.method_choice(args.method))
+            print(connection.method_choice(method=args.method, call="GET", data=None))
             # except TypeError:
             #     print(f"Method {args.method} not recognised as an actual function")
     else:
@@ -45,8 +50,9 @@ def main():
 
 if __name__ == "__main__":
 
-    # Start ArgParse section to ingest CLI commands
-    # Create the parser
+    """Start ArgParse section to ingest CLI commands
+    Create the parser"""
+
     cms_parser = argparse.ArgumentParser(
         prog="start.py",
         description="** CMS_SDK:  Interact with CMS from the Command Line **",

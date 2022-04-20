@@ -6,16 +6,16 @@ Purpose: Make API calls
 
 """
 
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import requests, urllib3
 import xmltodict, json
 import functools
 import os
 
 
-# Test Getters to be deleted
+"""Decorators for processing data"""
+
 def xml_Decorator(f) -> dict:
-    "A Decorator to ensure that the XML output is converted to Python Dict for management elsewhere"
+    """A Decorator to ensure that the XML output is converted to Python Dict for management elsewhere"""
 
     @functools.wraps(f)
     def wrap(*args, **kwargs):
@@ -26,7 +26,7 @@ def xml_Decorator(f) -> dict:
 
 
 def json_Decorator(f):
-    "A Decorator to ensure that the XML output is converted to Python Dict for management elsewhere"
+    """A Decorator to ensure that the python data is converted to JSON for management elsewhere"""
 
     @functools.wraps(f)
     def wrap(*args, **kwargs):
@@ -37,7 +37,7 @@ def json_Decorator(f):
 
 
 def save_Decorator(f):
-    "A Decorator to save a copy of the output of REST API"
+    """A Decorator to save a copy of the output of REST API"""
 
     @functools.wraps(f)
     def wrap(*args, **kwargs):
@@ -56,28 +56,22 @@ def save_Decorator(f):
 
 
 #  GET Requests - Tests
+#
+"""These can be removed as functions for testing against RESTCONF Devices"""
+# def _getarequest(uri, auth, params=None):
+#     "A test wrapper for GET Requests for Restconf XML requests"
+#     headers = {"Accept": "application/yang-data+xml, application/yang-data.errors+xml"}
+#     response = requests.get(uri, auth=auth, headers=headers, params=params)
+#     return response.content
 
 
-def _getarequest(uri, auth, params=None):
-    "A test wrapper for GET Requests for Restconf XML requests"
-    headers = {"Accept": "application/yang-data+xml, application/yang-data.errors+xml"}
-    response = requests.get(uri, auth=auth, headers=headers, params=params)
-    return response.content
+# def restconf_test(ip, auth):
+#     "This only a test RESTCONF request to show handling for XML"
+#     url = "https://" + ip + "/restconf/data/openconfig-interfaces:interfaces"
+#     return _getarequest(url, auth)
 
 
-def restconf_test(ip, auth):
-    "This only a test RESTCONF request to show handling for XML"
-    url = "https://" + ip + "/restconf/data/openconfig-interfaces:interfaces"
-    return _getarequest(url, auth)
-
-
-def ucsm_xml_api_test(ip, auth):
-    "Needs completing - This only a second test to UCS to show handling for XML"
-    pass
-
-
-# GET Requests API calls for Cisco Meeting Server
-
+"""Dictionary of method call (key) and CMS URI for that method () """
 
 methods = {
     "coSpaces": "/api/v1/coSpaces",
@@ -124,19 +118,55 @@ methods = {
 
 @xml_Decorator
 def _getrequest(uri, auth, verify=False, params=None):
+    """
+    Using Requests library to perform GET Request
+
+    Args:
+        uri: build within 'method_choice' function
+        auth: login details (user and password) 
+        verify: if True checks for certificate verification and verified HTTPS connectoon
+        params: body
+
+    Returns:
+        REST Response content
+
+    Raises:
+        requests.exceptions.RequestException:  (includes ConnectionError, HTTPError, Timeout, TooManyRedirects)
+    """
     headers = {"Accept": "application/xml"}
     response = requests.get(
-        uri, auth=auth, headers=headers, params=params, verify=False
+        uri, auth=auth, headers=headers, params=params, verify=verify
     )
     return response.content
 
 
 def _postrequest(uri, auth, body, verify=False, params=None):
+    """
+    Using Requests library to perform POST Request
+
+    Args:
+        uri: build within 'method_choice' function
+        auth: login details (user and password) 
+        verify: if True checks for certificate verification and verified HTTPS connectoon
+        params: body
+
+    Returns:
+        REST Response content
+
+    Raises:
+        requests.exceptions.RequestException:  (includes ConnectionError, HTTPError, Timeout, TooManyRedirects)
+    """
     headers = {"Accept": "application/xml", "Content-Type": "application/xml"}
     response = requests.post(
         uri, auth=auth, headers=headers, params=params, verify=verify, data=body
     )
     return response.status_code
+
+def list_methods():
+    """
+    Returns a list of the key in the methods dictionary
+    """
+    return list(methods.keys())
 
 
 def method_choice(
@@ -144,14 +174,14 @@ def method_choice(
     call: str,
     ip: str,
     auth: tuple,
-    test=True,
+    test,
     body=False,
 ) -> dict:
 
     "This allows args.method to choose a method and make a call.  The CMS calls need building as instance methods, like self.rest_test"
-    url = f"https//{ip}" + methods.get(method)
+    url = f"https://{ip}" + methods.get(method)
     if test:
-        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         verify = False
     else:
         verify = True

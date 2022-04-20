@@ -6,15 +6,16 @@ Purpose: Initiate Session, Meetings, Calls and other events
 
 """
 
-import pstats
+from datetime import date
 import yaml, json
 import os
 import api_calls as api
 import functools
 
 input_dir = "input"
-output_dir = "output"
-
+output_dir = "output1"
+file_path = "/mnt/c/Users/alpinist/python/CMS_SDK/src/CMS_SDK/variables/config.cfg"
+date = date.today().strftime("%b-%d-%Y")
 
 def prettyJSON(f):
     "Decorator to be used to take the dictionary out of most api_calls and pass to user interface as JSON"
@@ -40,17 +41,14 @@ class Session:
     :type addr: str, optional
     """
 
-    def __init__(self, file_path="src/CMS_SDK/variables/config.cfg", method=None):
+    def __init__(self, file_path=file_path, method=None):
 
         #  Load the config file with key detail
         with open(file_path, "rt") as handle:
             config = yaml.safe_load(handle)
             self.file = file_path
             self.test = config["config"]["test"]
-            if self.test:
-                self._ip = config["config"]["ip"]
-            else:
-                self._ip = config["config"]["ip"] + ":" + config["config"]["port"]
+            self._ip = config["config"]["ip"] + ":" + config["config"]["port"]
             self._username = config["config"]["username"]
             if config["config"]["password"]:
                 self._password = config["config"]["password"]
@@ -82,26 +80,46 @@ class Session:
         try:
             method_ouput = self.method_choice(name, call)
             print(f"Saving JSON output of {name} to {output_dir} directory")
-            with open(f"{output_dir}/{name}.txt", "w") as f:
+            with open(f"{output_dir}/{name}-{date}.txt", "w") as f:
                 f.write(method_ouput)
         except TypeError:
             print(f"Unable to perform REST request against: {name}")
 
     def get_facts(self):
-        call = "GET"
+        """
+        Creates an output directory, if one doesn't already exist
+        Gets a list of methods.
+        Performs a GET Request against each method and 
+        Converts to JSON response and saves to .json file in output folder
+
+        Args: None
+
+        Returns:
+            REST Response content
+
+        Raises:
+            requests.exceptions.RequestException:  (includes ConnectionError, HTTPError, Timeout, TooManyRedirects)
+            OSError, TypeError - file handling
+        """
         if not os.path.isdir(output_dir):
             os.makedirs(output_dir)
             print(f"Creating {output_dir} directory .....")
-        if self.test:
-            name = "rest_test"
-            self.write_file(name, call)
-        else:
-            for name in self.methods.keys():
-                if name == "rest_test":
-                    continue
-                else:
-                    self.write_file(name, call)
-
+        methods = api.list_methods()
+        for method in methods:
+            try:
+                print(f"Performing REST call against {method}")
+                text = self.method_choice(method=method, call="GET", data=None)
+                print(f"Saving JSON output of {method} to {output_dir} directory")
+                with open(f'{output_dir}/{method}-{date}.json', 'w') as jfile:
+                    jfile.write(text)
+            except (ConnectionError, HTTPError, Timeout, TooManyRedirects):
+                print(f"Unable to perform REST request against: {method}")
+            except (OSError, TypeError):
+                print(f"Unable to save file for {method}")
+            except Exception as err:
+                print(f"Unexpected error with {method} is",repr(err))
+                sys.exit(1)
+               
     def _yaml2dict(self, file_input):
         return yaml.safe_load(file_input)
 
