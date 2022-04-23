@@ -12,10 +12,12 @@ import os
 import api_calls as api
 import functools
 
-input_dir = "input"
+
+input_dir = "CMS_SDK/templates"
 output_dir = "output1"
 file_path = "/mnt/c/Users/alpinist/python/CMS_SDK/src/CMS_SDK/variables/config.cfg"
 date = date.today().strftime("%b-%d-%Y")
+
 
 def prettyJSON(f):
     "Decorator to be used to take the dictionary out of most api_calls and pass to user interface as JSON"
@@ -70,10 +72,10 @@ class Session:
 
     # Decorator to be used to take the dictionary out of most api_calls and make easier to read
 
-    @prettyJSON
-    def method_choice(self, method, call, data):
+    # @prettyJSON
+    def method_choice(self, method, call, data, uri=None):
         "This allows args.method to choose a method and make a call.  The CMS calls need building as instance methods, like self.rest_test"
-        return api.method_choice(method, call, self._ip, self._auth, self.test, data)
+        return api.method_choice(method, call, self._ip, self._auth, self.test, data, uri=uri)
 
     def write_file(self, name, call):
         print(f"Performing REST call against {name}")
@@ -89,7 +91,7 @@ class Session:
         """
         Creates an output directory, if one doesn't already exist
         Gets a list of methods.
-        Performs a GET Request against each method and 
+        Performs a GET Request against each method and
         Converts to JSON response and saves to .json file in output folder
 
         Args: None
@@ -110,16 +112,16 @@ class Session:
                 print(f"Performing REST call against {method}")
                 text = self.method_choice(method=method, call="GET", data=None)
                 print(f"Saving JSON output of {method} to {output_dir} directory")
-                with open(f'{output_dir}/{method}-{date}.json', 'w') as jfile:
+                with open(f"{output_dir}/{method}-{date}.json", "w") as jfile:
                     jfile.write(text)
             except (ConnectionError, HTTPError, Timeout, TooManyRedirects):
                 print(f"Unable to perform REST request against: {method}")
             except (OSError, TypeError):
                 print(f"Unable to save file for {method}")
             except Exception as err:
-                print(f"Unexpected error with {method} is",repr(err))
+                print(f"Unexpected error with {method} is", repr(err))
                 sys.exit(1)
-               
+
     def _yaml2dict(self, file_input):
         return yaml.safe_load(file_input)
 
@@ -127,10 +129,24 @@ class Session:
         return json.load(file_input)
 
     def set_up(self):
+        """
+        Set-up a CMS Server with existing XML files.
+
+
+        Args: None
+
+        Returns:
+            Success or failure codes of REST POST request
+
+        Raises:
+            requests.exceptions.RequestException:  (includes ConnectionError, HTTPError, Timeout, TooManyRedirects)
+            OSError, TypeError - file handling
+        """
         call = "POST"
         for file_name in os.listdir(input_dir):
             filename, extension = file_name.split(".")
-            with open(file_name, "r") as read_input:
+            with open(f"{input_dir}/{file_name}", "r") as template:
+                read_input = template.read()
                 if extension == "yaml" or extension == "yml":
                     data = _yaml2dict(read_input)
                 if extension == "json" or extension == "jsn":
@@ -140,22 +156,36 @@ class Session:
 
                 api_call = self.method_choice(filename, call, data)
 
-                if api_call >= 200 and api_call <= 300:
-                    print(f"API call to {filename} successful")
-                if api_call >= 300:
-                    print(
-                        f"API Call to {filename} unsuccessful - Status Code {api_call}"
-                    )
+                print(api_call)
+
+                # if int(api_call) >= 200 and int(api_call) <= 300:
+                #     print(f"API call to {filename} successful")
+                # if int(api_call) >= 300:
+                #     print(
+                #         f"API Call to {filename} unsuccessful - Status Code {api_call}"
+                #     )
 
 
-# class Space(Session):
-#     def __init__(self, coSpaceID, callLegProfileID=None):
-#         super().__init__()
-#         self.coSpaceID = coSpaceID
-#         if callLegProfileID:
-#             self.callLegProfileID = callLegProfileID
-#         else:
-#             self.callLegProfileID = None
+class Space(Session):
+    def __init__(self, coSpaceID=None, callLegProfileID=None):
+        super().__init__()
+        if coSpaceID:
+            self.coSpaceID = coSpaceID
+        if callLegProfileID:
+            self.callLegProfileID = callLegProfileID
+
+    def create_coSpace(self):
+        """
+        POST of template - returns the Location from the header"""
+        with open(f"{input_dir}/coSpaces.xml", "r") as template:
+            read_input = template.read()
+            api_call = self.method_choice('coSpaces', 'POST', read_input)
+            get_request= self.method_choice('coSpaces', 'POST', data=None, uri=api_call)
+            
+            return get_request
+
+    def change_coSpace(self):
+        pass
 
 #     def __call__(self, *args, **kwargs):
 #         return self(*args, **kwargs)

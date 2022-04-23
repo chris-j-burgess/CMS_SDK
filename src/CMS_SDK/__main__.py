@@ -9,11 +9,12 @@ Purpose: Allow execution of the package
 
 import argparse
 import init
+import pprint
 
 
 def main():
     """
-    This function controls the user interaction through CLI using argsparse.  
+    This function controls the user interaction through CLI using argsparse.
     It uses the init.Session class to interact with CMS Server, and handle connection specific variables.
     """
 
@@ -30,18 +31,24 @@ def main():
     if args.method:
         print(f"Method is:  {args.method} \n \n")
         if args.method == "get_facts":
-            """ get_facts needs rewriting.  Written to support RESTCONF request.  Needs to run a set of GET Requests across all method statements"""
+            """get_facts needs rewriting.  Written to support RESTCONF request.  Needs to run a set of GET Requests across all method statements"""
             connection.get_facts()
+        if args.method == "set_up":
+            """get_facts needs rewriting.  Written to support RESTCONF request.  Needs to run a set of GET Requests across all method statements"""
+            connection.set_up()
         else:
             # try:
-            print(connection.method_choice(method=args.method, call="GET", data=None))
+            data = connection.method_choice(method=args.method, call="GET", data=None)
+            pprint.pprint(data)
             # except TypeError:
             #     print(f"Method {args.method} not recognised as an actual function")
     else:
         print("No Method Selected")
 
     if args.data:
-        print(f"Data file located at:  {args.data}")
+        connection = init.Space()
+        print(connection.create_coSpace())
+
     else:
         print("No Data File this time")
 

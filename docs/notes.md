@@ -10,6 +10,14 @@ This command creates a new api user and prompts for a password for the user whic
 
 On first login, the user will be asked to configure a new password. You must provide these credentials in order to use the API.
 
+Actions required
+
+* need to look at init/set_up function to POST existing files to a CMS Server
+*  create list_methods function
+blq
+* work out structure of class Session - how do we ctart to interact with CMS to get info and input info
+
+
 
 https://ciscocms.docs.apiary.io/#introduction/general-structure-of-methods
 https://developer.cisco.com/docs/cisco-meeting-server/#!getting-started-with-apis

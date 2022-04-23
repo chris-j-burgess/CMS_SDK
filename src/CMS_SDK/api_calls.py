@@ -6,6 +6,8 @@ Purpose: Make API calls
 
 """
 
+from multiprocessing.sharedctypes import Value
+import sys
 import requests, urllib3
 import xmltodict, json
 import functools
@@ -23,7 +25,6 @@ def xml_Decorator(f) -> dict:
         return xmltodict.parse(text)
 
     return wrap
-
 
 def json_Decorator(f):
     """A Decorator to ensure that the python data is converted to JSON for management elsewhere"""
@@ -53,22 +54,6 @@ def save_Decorator(f):
         return None
 
     return wrap
-
-
-#  GET Requests - Tests
-#
-"""These can be removed as functions for testing against RESTCONF Devices"""
-# def _getarequest(uri, auth, params=None):
-#     "A test wrapper for GET Requests for Restconf XML requests"
-#     headers = {"Accept": "application/yang-data+xml, application/yang-data.errors+xml"}
-#     response = requests.get(uri, auth=auth, headers=headers, params=params)
-#     return response.content
-
-
-# def restconf_test(ip, auth):
-#     "This only a test RESTCONF request to show handling for XML"
-#     url = "https://" + ip + "/restconf/data/openconfig-interfaces:interfaces"
-#     return _getarequest(url, auth)
 
 
 """Dictionary of method call (key) and CMS URI for that method () """
@@ -134,10 +119,14 @@ def _getrequest(uri, auth, verify=False, params=None):
         requests.exceptions.RequestException:  (includes ConnectionError, HTTPError, Timeout, TooManyRedirects)
     """
     headers = {"Accept": "application/xml"}
-    response = requests.get(
-        uri, auth=auth, headers=headers, params=params, verify=verify
-    )
-    return response.content
+    try:
+        response = requests.get(
+        uri, auth=auth, headers=headers, params=params, verify=verify)
+        return response.content
+    
+    except (ConnectionError, HTTPError, Timeout, TooManyRedirects) as err:
+        print(f"Unable to perform REST request against: {method}")
+        return repr(err)
 
 
 def _postrequest(uri, auth, body, verify=False, params=None):
@@ -157,14 +146,21 @@ def _postrequest(uri, auth, body, verify=False, params=None):
         requests.exceptions.RequestException:  (includes ConnectionError, HTTPError, Timeout, TooManyRedirects)
     """
     headers = {"Accept": "application/xml", "Content-Type": "application/xml"}
-    response = requests.post(
-        uri, auth=auth, headers=headers, params=params, verify=verify, data=body
-    )
-    return response.status_code
+    try:
+        response = requests.post(
+        uri, auth=auth, headers=headers, params=params, verify=verify, data=body)
+
+        return response.headers
+
+    except (ConnectionError, HTTPError, Timeout, TooManyRedirects) as err:
+        print(f"Unable to perform REST request against: {method}")
+        return repr(err)
+
+
 
 def list_methods():
     """
-    Returns a list of the key in the methods dictionary
+    Returns a list of the keys in the methods dictionary
     """
     return list(methods.keys())
 
@@ -176,16 +172,52 @@ def method_choice(
     auth: tuple,
     test,
     body=False,
-) -> dict:
+    uri=None) -> dict:
+    """
+    This allows args.method to choose a method and make a call.  The CMS calls need building as instance methods.
+    Set the verify criteria (ie if to give SSL warnings), based on if Test Lab input from variables
 
-    "This allows args.method to choose a method and make a call.  The CMS calls need building as instance methods, like self.rest_test"
-    url = f"https://{ip}" + methods.get(method)
-    if test:
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        verify = False
-    else:
-        verify = True
-    if call == "POST" and body != None:
-        return _postrequest(url, auth, body, verify)
-    else:
-        return _getrequest(url, auth, verify)
+    Args:
+        method: str, 
+        call: str,
+        ip: str,
+        auth: tuple,
+        test,
+        body=False,
+        uri: str,
+
+    Returns:
+        REST Response content
+
+    Raises:
+        requests.exceptions.RequestException:  (includes ConnectionError, HTTPError, Timeout, TooManyRedirects)
+        OSError, TypeError - file handling
+    """
+    try:
+        if uri:
+            url = f"https://{ip}" + uri
+        else:
+            url = f"https://{ip}" + methods.get(method)
+        if test:
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            verify = False
+        else:
+            verify = True
+
+        if call == "POST" and body != None:
+
+            print(body)
+
+            create = _postrequest(url, auth, body, verify)
+            for header, value in create.items():
+                if header == 'Location':
+                    print(f"Created Resource at: {value}")
+                    return value
+        else:
+            print(f"Getting End Point: {url}")
+            response = _getrequest(url, auth, verify)
+            return response
+
+    except TypeError as terr:
+        print("Not able to retreive Method in Method Choice. Error response: ", repr(terr))
+        sys.exit(1)
