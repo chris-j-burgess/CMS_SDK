@@ -11,6 +11,8 @@ import yaml, json
 import os
 import api_calls as api
 import functools
+from urllib.parse import urlencode
+import pprint
 
 
 input_dir = "CMS_SDK/templates"
@@ -75,7 +77,9 @@ class Session:
     # @prettyJSON
     def method_choice(self, method, call, data, uri=None):
         "This allows args.method to choose a method and make a call.  The CMS calls need building as instance methods, like self.rest_test"
-        return api.method_choice(method, call, self._ip, self._auth, self.test, data, uri=uri)
+        return api.method_choice(
+            method, call, self._ip, self._auth, self.test, body=data, uri=uri
+        )
 
     def write_file(self, name, call):
         print(f"Performing REST call against {name}")
@@ -173,19 +177,177 @@ class Space(Session):
             self.coSpaceID = coSpaceID
         if callLegProfileID:
             self.callLegProfileID = callLegProfileID
+        self.stored_values = {}
+        self.stored_value_tracker = 0
+
+    def interactive(self, coSpaceID=None):
+        if coSpaceID:
+            self.coSpaceID = coSpaceID
+            print(f"Current coSpaceID is:  {self.coSpaceID}")
+        else:
+            print(f"No Current coSpaceID exists")
+        choice = input("""\n What would you like to do? \n
+        1. Create a coSpace 
+        2. Modify a coSpace
+        3. Delete a coSpace
+        4. List coSpaces
+        5. Select a value from a coSpace
+        6. Print stored values
+        7. Add a coSpace Member
+        8.  Post to a message board of a coSpace
+        9. Others
+        \n?
+        """)
+        if int(choice) == 1:
+            get_request=self.create_coSpace()
+            coSpaceID = get_request['coSpace']['@id']
+            self.interactive(coSpaceID)
+        if int(choice) == 3:
+            self.delete_coSpace()
+        if int(choice) == 4:
+            self.list_coSpaces()
+        if int(choice) == 5:
+            self.select_coSpace_value()
+        if int(choice) == 6:
+            self.print_stored_values()
+        else:
+            print("Choice not recognised")
+
 
     def create_coSpace(self):
         """
         POST of template - returns the Location from the header"""
-        with open(f"{input_dir}/coSpaces.xml", "r") as template:
-            read_input = template.read()
-            api_call = self.method_choice('coSpaces', 'POST', read_input)
-            get_request= self.method_choice('coSpaces', 'POST', data=None, uri=api_call)
-            
+        with open(f"{input_dir}/coSpaces.yaml", "r") as template:
+            read_input=yaml.safe_load(template)
+            encoded_input = urlencode(read_input)
+            api_call = self.method_choice("coSpaces", "POST", data=encoded_input, uri=None)
+            get_request = self.method_choice(
+                "coSpaces", "GET", data=None, uri=api_call
+            )
+            coSpaceID = get_request['coSpace']['@id']
+            self.coSpaceID = coSpaceID
             return get_request
 
-    def change_coSpace(self):
+    def change_coSpace(self, coSpaceID):
+        # change = self.method_choice("coSpaces", "PUT", data=encoded_input, uri=api_call)
         pass
+
+    def delete_coSpace(self, coSpaceID=None):
+        if coSpaceID:
+            print(f"Deleting {coSpaceID}")
+            self._continue
+        else:
+            coSpaceID = input("No coSpaceID.  Input coSpaceID: ")
+            print(f"Deleting {coSpaceID}")
+            self._continue
+        try:
+            delete_request = self.method_choice(
+                "coSpaces", "DELETE", data=None, uri=f"/api/v1/coSpaces/{coSpaceID}"
+            )
+            print(f"Deleted {coSpaceID}")
+        except:
+            pass
+        return self.interactive()
+
+    def select_coSpace_value(self, coSpaceID=None):
+        if coSpaceID:
+            print(f"Collecting values for {coSpaceID}")
+            self._continue
+        else:
+            coSpaceID = input("No coSpaceID.  Input coSpaceID: ")
+            print(f"Collecting values for {coSpaceID}")
+            self._continue()
+            try:
+                response = self.method_choice(
+                    "coSpaces", "GET", data=None, uri=f"/api/v1/coSpaces/{coSpaceID}"
+                )
+            except KeyError:
+                self.interactive()
+
+            dictionary = {}
+            count_i = 0
+    
+
+            for key, value in response['coSpace'].items():
+                dictionary[count_i] = (f" Key: {key}", f" Value: {value}" )
+                count_i = count_i + 1
+            pprint.pprint(dictionary)
+            selection = input("Select a value by entering a number or any key to exit: ")
+            try:    
+                print(f"You chose: {selection}\n")
+                choice = dictionary.get(int(selection))
+                key_value = dictionary.get(0)
+                print(f"You chose: {selection}, {choice[0]}  = {choice[1]} \n")
+                self.insert_stored_value(key_value[1], choice[1])
+            except Exception as err:
+                print(repr(err))
+                print("Choice not recognised")
+        return self.interactive()
+    
+    def insert_stored_value(self, key, value):
+        self.stored_values[self.stored_value_tracker] = (key,value)
+        self.stored_value_tracker = self.stored_value_tracker + 1
+        print(f"Current stored values:  {self.stored_values}")
+
+    def print_stored_values(self):
+        print(f"Current stored values:")
+        pprint.pprint(self.stored_values)
+        return self.interactive()
+
+    def pretty_print_results(self, data):
+        dictionary = {}
+        key = 0
+        coSpace = data['coSpaces']['coSpace']
+        for result in coSpace:
+            dictionary[key] = (f" Cospace: {result['@id']}", f" Name: {result['name']}" )
+            key = key + 1
+        pprint.pprint(dictionary)
+
+    def _continue(self):
+        choice = input("Continue y/n ?\n")
+        if choice == 'y' or choice == 'Y':
+            return True
+        else:
+            quit(self.interactive())
+
+        
+    def list_coSpaces(self):
+        get_request = self.method_choice(
+                "coSpaces", "GET", data=None, uri=None
+            )
+        total = int(get_request['coSpaces']['@total'])
+        print(f"""\nTotal number of coSpaces currently is: {total}\n
+        Loading in batches of 20\n""")
+        
+        get_request = self.method_choice(
+                "coSpaces", "GET", data=None, uri="/api/v1/coSpaces/?offset=0&limit=20"
+            )
+        self.pretty_print_results(get_request)
+        self._continue()
+        
+        
+        count = total - 20
+        offset = 20
+        limit = 20
+
+        while count > 0:
+            uri = f"/api/v1/coSpaces/?offset={offset}&limit={limit}"
+            next_request = self.method_choice(
+                 "coSpaces", "GET", data=None, uri=uri
+                )
+            self.pretty_print_results(next_request)
+            self._continue()
+            count = count - 20
+            offset = offset + 20
+        
+        return self.interactive()
+
+    def filter_coSpaces(self):
+        #"?offset=&limit=&filter=&tenantFilter=&callLegProfileFilter="
+        # use filters provided as docs:
+        # https://ciscocms.docs.apiary.io/#reference/cospace-related-methods/retrieving-cospaces/retrieving-cospaces
+        pass
+
 
 #     def __call__(self, *args, **kwargs):
 #         return self(*args, **kwargs)

@@ -24,9 +24,12 @@ def main():
         connection = init.Session()
 
     if args.interactive:
-        print("Let's go interactive")
+        print("Let's go interactive\n\n")
+        connection = init.Space()
+        connection.interactive()
+
     else:
-        print("Session Mode")
+        print("Session Mode\n\n")
 
     if args.method:
         print(f"Method is:  {args.method} \n \n")
@@ -43,14 +46,14 @@ def main():
             # except TypeError:
             #     print(f"Method {args.method} not recognised as an actual function")
     else:
-        print("No Method Selected")
+        print("No Method Selected\n\n")
 
     if args.data:
         connection = init.Space()
-        print(connection.create_coSpace())
+        pprint.pprint(connection.create_coSpace())
 
     else:
-        print("No Data File this time")
+        print("No Data File this time\n\n")
 
 
 #  print(connection.rest_test())

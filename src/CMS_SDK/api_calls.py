@@ -6,7 +6,6 @@ Purpose: Make API calls
 
 """
 
-from multiprocessing.sharedctypes import Value
 import sys
 import requests, urllib3
 import xmltodict, json
@@ -15,6 +14,7 @@ import os
 
 
 """Decorators for processing data"""
+
 
 def xml_Decorator(f) -> dict:
     """A Decorator to ensure that the XML output is converted to Python Dict for management elsewhere"""
@@ -25,6 +25,7 @@ def xml_Decorator(f) -> dict:
         return xmltodict.parse(text)
 
     return wrap
+
 
 def json_Decorator(f):
     """A Decorator to ensure that the python data is converted to JSON for management elsewhere"""
@@ -108,7 +109,7 @@ def _getrequest(uri, auth, verify=False, params=None):
 
     Args:
         uri: build within 'method_choice' function
-        auth: login details (user and password) 
+        auth: login details (user and password)
         verify: if True checks for certificate verification and verified HTTPS connectoon
         params: body
 
@@ -121,21 +122,22 @@ def _getrequest(uri, auth, verify=False, params=None):
     headers = {"Accept": "application/xml"}
     try:
         response = requests.get(
-        uri, auth=auth, headers=headers, params=params, verify=verify)
+            uri, auth=auth, headers=headers, params=params, verify=verify
+        )
         return response.content
-    
+
     except (ConnectionError, HTTPError, Timeout, TooManyRedirects) as err:
         print(f"Unable to perform REST request against: {method}")
         return repr(err)
 
 
-def _postrequest(uri, auth, body, verify=False, params=None):
+def _postrequest(uri, call, auth, body=None, verify=False, params=None):
     """
     Using Requests library to perform POST Request
 
     Args:
         uri: build within 'method_choice' function
-        auth: login details (user and password) 
+        auth: login details (user and password)
         verify: if True checks for certificate verification and verified HTTPS connectoon
         params: body
 
@@ -147,15 +149,29 @@ def _postrequest(uri, auth, body, verify=False, params=None):
     """
     headers = {"Accept": "application/xml", "Content-Type": "application/xml"}
     try:
-        response = requests.post(
-        uri, auth=auth, headers=headers, params=params, verify=verify, data=body)
+        if call == 'PUT':
+            response = requests.put(
+                uri, auth=auth, headers=headers, params=params, verify=verify, data=body
+            )
+            return response.headers
+        
+        if call == 'DELETE':
+            response = requests.delete(
+                uri, auth=auth, headers=headers, params=params, verify=verify, data=body
+            )
+            return response.status_code
 
-        return response.headers
+        else:
+            response = requests.post(
+                uri, auth=auth, headers=headers, params=params, verify=verify, data=body
+            )
+            return response.headers
+
+        
 
     except (ConnectionError, HTTPError, Timeout, TooManyRedirects) as err:
         print(f"Unable to perform REST request against: {method}")
         return repr(err)
-
 
 
 def list_methods():
@@ -166,25 +182,21 @@ def list_methods():
 
 
 def method_choice(
-    method: str,
-    call: str,
-    ip: str,
-    auth: tuple,
-    test,
-    body=False,
-    uri=None) -> dict:
+    method: str, call: str, ip: str, auth: tuple, test, body:str, uri=None,
+) -> dict:
     """
     This allows args.method to choose a method and make a call.  The CMS calls need building as instance methods.
     Set the verify criteria (ie if to give SSL warnings), based on if Test Lab input from variables
 
     Args:
-        method: str, 
-        call: str,
-        ip: str,
-        auth: tuple,
-        test,
-        body=False,
+        method: str,  eg coSpaces
+        call: str,   eg 'GET', 'POST'
+        ip: str,   ip address
+        auth: tuple,  (username, password}
+        test: boolean,
+        body: str,  text for body of request
         uri: str,
+        params: str
 
     Returns:
         REST Response content
@@ -204,20 +216,33 @@ def method_choice(
         else:
             verify = True
 
-        if call == "POST" and body != None:
+        if call == "POST" or call == "PUT" and body != None:
 
-            print(body)
+            print(f"Performing a {call} request \n\n")
 
-            create = _postrequest(url, auth, body, verify)
+            create = _postrequest(url, call, auth, body, verify)
+
             for header, value in create.items():
-                if header == 'Location':
-                    print(f"Created Resource at: {value}")
+                if header == "Location":
+                    print(f"Created Resource at: {value}\n\n")
                     return value
+
+        if call == "DELETE":
+            delete = _postrequest(url, call, auth, verify)
+            if delete >= 200 and delete <=400:
+                print(f"Delete Successful.  Status:  {delete}")
+            if delete >= 400 and delete <=500:
+                print(f"Delete Successful.  Status:  {delete}")
+            return delete
+
         else:
-            print(f"Getting End Point: {url}")
+            # print(f"Getting End Point: {url}\n\n")n
+            
             response = _getrequest(url, auth, verify)
             return response
 
     except TypeError as terr:
-        print("Not able to retreive Method in Method Choice. Error response: ", repr(terr))
+        print(
+            "Not able to retreive Method in Method Choice. Error response: ", repr(terr)
+        )
         sys.exit(1)
